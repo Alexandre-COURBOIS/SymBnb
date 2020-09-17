@@ -118,6 +118,10 @@
       <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
       <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/vendor/sensio/framework-extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
+      <path value="$PROJECT_DIR$/vendor/fzaninotto/faker" />
+      <path value="$PROJECT_DIR$/vendor/cocur/slugify" />
     </include_path>
   </component>
   <component name="ProjectId" id="1hdoOzuJNzuaYHiVQT5MKqkg3pb" />
@@ -128,9 +132,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../xampp/htdocs/Symfony/Cours_Liam" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../xampp/htdocs/StageSite/tts" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="terminal" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -142,7 +146,7 @@
       <option name="presentableId" value="Default" />
       <updated>1600350301870</updated>
       <workItem from="1600350302907" duration="3491000" />
-      <workItem from="1600353813442" duration="5601000" />
+      <workItem from="1600353813442" duration="25944000" />
     </task>
     <servers />
   </component>
@@ -154,10 +158,18 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="770" y="399" key="#Composer/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1600350326770" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1600351956969">
+    <state x="705" y="344" key="#Notifications" timestamp="1600362755350">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1600351956969" />
+    <state x="705" y="344" key="#Notifications/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1600362755350" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1600379954904">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1600379954904" />
+    <state x="461" y="165" key="SettingsEditor" timestamp="1600363816459">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1600363816459" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1600359191282">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes formules{% endblock %}
+
+{% block body %}
+    <div class="container-xl">
+
+        <p class="h1 text-center my-5">Voici les annonces de nos hotes</p>
+
+        <div class="row">
+            {% for annonce in annonces %}
+
+                {% set url = path('annonce_show', {'slug': annonce.slug}) %}
+
+                <div class="col-md-4">
+                    <div class="card bg-light mb-3">
+                        <div class="card-header text-center">
+                            {{ annonce.rooms }} chambres, <strong>{{ annonce.price }}&euro; / nuit</strong>
+                            <br>
+                            <small>pas encore noté</small>
+                        </div>
+                        <a href="{{ url }}">
+                            <img src="{{ annonce.coverImage }}" alt="Image de l'appartement"
+                                 style="height: 200px; width:100%; display: block;"/>
+                        </a>
+
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="{{ url }}">{{ annonce.title }}</a>
+                            </h4>
+                            <p class="card-text">{{ annonce.introduction }}</p>
+                            <a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
