@@ -30,8 +30,7 @@ class AppFixtures extends Fixture
                 ->setIntroduction($introduction)
                 ->setContent($content)
                 ->setPrice(mt_rand(25, 150))
-                ->setRooms(mt_rand(1, 5))
-                ->setCreatedAt(new \DateTime());
+                ->setRooms(mt_rand(1, 5));
 
             for ($j = 1; $j <= mt_rand(2, 5); $j++) {
                 $image = new Image();

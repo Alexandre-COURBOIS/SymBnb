@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Annonce;
+use App\Form\AnnonceType;
 use App\Repository\AnnonceRepository;
+use Cocur\Slugify\Slugify;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,6 +33,43 @@ class AnnonceController extends AbstractController
     }
 
     /**
+     * Permet de créer une annonce
+     *
+     * @Route("/annonces/creer", name="annonces_create")
+     *
+     * @return Response
+     */
+    public function create(Request $request, EntityManagerInterface $manager)
+    {
+
+        $annonce = new Annonce();
+
+        $form = $this->createForm(AnnonceType::class, $annonce);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $manager->persist($annonce);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre annonce <strong>' . $annonce->getTitle() . '</strong> a bien été enregistrée !'
+            );
+
+            return $this->redirectToRoute('annonce_show', [
+                'slug' => $annonce->getSlug()
+            ]);
+
+        }
+
+        return $this->render('annonce/new.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * Permet d'afficher une seule annonce
      *
      * @Route("/annonces/{slug}", name="annonce_show")
@@ -39,11 +80,9 @@ class AnnonceController extends AbstractController
     {
 
         return $this->render('annonce/show.html.twig', [
-            'annonce' => $annonce,
+            'annonce' => $annonce
         ]);
     }
-
-
 
 
 }

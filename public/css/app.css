@@ -15,3 +15,21 @@ div.carousel-caption {
 div.carousel-caption h5 {
     color: white;
 }
+
+footer {
+    background-image: url("https://media.inmobalia.com/imgV1/B98Le8~d7M9k3DegigWijpPHfi0CkGBxNjyvwbJCTNd78i6fe7vV4Tg6ut7oalOUf87i34VQ~gVRXolexx8B0gLOzdF6snorfEkVLPNZ9eAdvaMtDrPr4tqJ5XH6vOEu.jpg");
+    background-size: cover;
+    background-position: center center;
+    opacity: 0.85;
+}
+
+footer div {
+    color: white;
+    text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+}
+
+footer .aiming {
+    margin-bottom: 30px;
+    text-decoration: underline;
+    font-size: 20px;
+}

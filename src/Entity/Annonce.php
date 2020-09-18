@@ -91,6 +91,20 @@ class Annonce
 
     }
 
+    /**
+     * Permet de set l'heure à laquelle l'article est créer
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function initCreateDate() {
+
+        if (empty($this->getCreatedAt())){
+            $this->setCreatedAt(new \DateTime());
+        }
+
+    }
+
     public function getId(): ?int
     {
         return $this->id;
