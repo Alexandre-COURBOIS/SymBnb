@@ -7,10 +7,15 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AnnonceRepository::class)
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(
+ *     fields={"title"},message="Une autre annonce possède déjà ce titre, merci de le modifier."
+ * )
  */
 class Annonce
 {
@@ -23,6 +28,8 @@ class Annonce
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=10, max="200", minMessage="Le titre doit faire plus de 10 caractères", maxMessage="Le titre doit faire moins de 200 caractères")
+     * @Assert\NotBlank(message="merci de renseigner ce champ")
      */
     private $title;
 
@@ -33,26 +40,34 @@ class Annonce
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="merci de renseigner ce champ")
      */
     private $price;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=20,minMessage="Votre introduction doit faire plus de 20 caractères")
+     * @Assert\NotBlank(message="merci de renseigner ce champ")
      */
     private $introduction;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=100,minMessage="Votre description ne peut pas faire moins de 100 caractères")
+     * @Assert\NotBlank(message="merci de renseigner ce champ")
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url()
+     * @Assert\NotBlank(message="merci de renseigner ce champ")
      */
     private $coverImage;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="merci de renseigner ce champ")
      */
     private $rooms;
 
@@ -68,6 +83,7 @@ class Annonce
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="ad", orphanRemoval=true)
+     * @Assert\Valid()
      */
     private $images;
 
@@ -77,7 +93,7 @@ class Annonce
     }
 
     /**
-     * Permet d'intialiser le slug
+     * Permet d'intialiser le slug et de l'update sur la modification de l'article
      *
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -85,6 +101,9 @@ class Annonce
     public function initSlug() {
 
         if (empty($this->slug)){
+            $slug = new Slugify();
+            $this->slug = $slug->slugify($this->title);
+        } elseif (!empty($this->slug)) {
             $slug = new Slugify();
             $this->slug = $slug->slugify($this->title);
         }
@@ -101,6 +120,22 @@ class Annonce
 
         if (empty($this->getCreatedAt())){
             $this->setCreatedAt(new \DateTime());
+        }
+
+    }
+
+    /**
+     * Permet de set l'heure à laquelle l'article a été modifié
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function initUpdateDate() {
+
+        if (empty($this->getModifiedAt())){
+            $this->setModifiedAt(new \DateTime());
+        } elseif (!empty($this->getModifiedAt())) {
+            $this->setModifiedAt(new \DateTime());
         }
 
     }

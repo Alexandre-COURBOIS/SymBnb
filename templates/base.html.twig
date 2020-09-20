@@ -11,17 +11,23 @@
 </head>
 
 <body>
+
+
 {% include 'common/header.html.twig' %}
-
-
-<script src="{{ asset('/js/jquery.min.js') }}"></script>
-<script src="{{ asset('/js/popper.min.js') }}"></script>
-<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
 
 {% block body %}{% endblock %}
 
+{% include 'common/footer.html.twig' %}
+
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+{% block javascripts %}{% endblock %}
+
+
 </body>
 
-{% include 'common/footer.html.twig' %}
+
+</html>
 
 

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Annonce;
+use App\Entity\Image;
 use App\Form\AnnonceType;
 use App\Repository\AnnonceRepository;
 use Cocur\Slugify\Slugify;
@@ -48,7 +49,13 @@ class AnnonceController extends AbstractController
 
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+            foreach ($annonce->getImages() as $image ) {
+                $image->setAd($annonce);
+                $manager->persist($image);
+            }
 
             $manager->persist($annonce);
             $manager->flush();
@@ -66,6 +73,47 @@ class AnnonceController extends AbstractController
 
         return $this->render('annonce/new.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Permet d'afficher le formulaire d'édition
+     *
+     * @Route("/annonces/{slug}/edit", name="annonce_edit")
+     *
+     * @return Response
+     */
+    public function edit(Annonce $annonce, Request $request, EntityManagerInterface $manager)
+    {
+        $form = $this->createForm(AnnonceType::class, $annonce);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            foreach ($annonce->getImages() as $image ) {
+                $image->setAd($annonce);
+                $manager->persist($image);
+            }
+
+
+            $manager->persist($annonce);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Les modifications de l\'annonce <strong>' . $annonce->getTitle() . '</strong> ont bien été modifiées !'
+            );
+
+            return $this->redirectToRoute('annonce_show', [
+                'slug' => $annonce->getSlug()
+            ]);
+
+        }
+
+        return $this->render('annonce/edit.html.twig', [
+            'form' => $form->createView(),
+            'annonce' => $annonce
         ]);
     }
 
