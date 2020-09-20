@@ -87,6 +87,12 @@ class Annonce
      */
     private $images;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="annonces")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -120,22 +126,6 @@ class Annonce
 
         if (empty($this->getCreatedAt())){
             $this->setCreatedAt(new \DateTime());
-        }
-
-    }
-
-    /**
-     * Permet de set l'heure à laquelle l'article a été modifié
-     *
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function initUpdateDate() {
-
-        if (empty($this->getModifiedAt())){
-            $this->setModifiedAt(new \DateTime());
-        } elseif (!empty($this->getModifiedAt())) {
-            $this->setModifiedAt(new \DateTime());
         }
 
     }
@@ -280,6 +270,18 @@ class Annonce
                 $image->setAd(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

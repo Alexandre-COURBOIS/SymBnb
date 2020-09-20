@@ -36,7 +36,7 @@ class AnnonceController extends AbstractController
     /**
      * Permet de créer une annonce
      *
-     * @Route("/annonces/creer", name="annonces_create")
+     * @Route("/annonces/new", name="annonces_create")
      *
      * @return Response
      */
@@ -96,6 +96,7 @@ class AnnonceController extends AbstractController
                 $manager->persist($image);
             }
 
+            $annonce->setModifiedAt(new \DateTime());
 
             $manager->persist($annonce);
             $manager->flush();

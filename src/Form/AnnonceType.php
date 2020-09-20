@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Annonce;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -13,25 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AnnonceType extends AbstractType
+class AnnonceType extends ApplicationType
 {
-    /**
-     * Permet de setup le label et attr dans le builder
-     *
-     * @param string $label
-     * @param string $placeholder
-     *
-     * @return array
-     */
-    private function getConfig($label, $placeholder)
-    {
-        return [
-            'label' => $label,
-            'attr' => [
-                'placeholder' => $placeholder
-            ]
-        ];
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
