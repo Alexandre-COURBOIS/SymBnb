@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -28,36 +29,47 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Merci de renseigner ce champ.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Merci de renseigner ce champ.")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Merci de renseigner ce champ.")
+     * @Assert\Email(message="Veuillez renseigner un email valide.")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="Merci de renseigner ce champ.")
+     * @Assert\Url(message="Veuillez saisir une url valide pour votre avatar")
      */
     private $picture;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Merci de renseigner ce champ.")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Merci de renseigner ce champ.")
+     * @Assert\Length(min="10",minMessage="Votre introduction doit faire au moins 10 caractères.")
      */
     private $introduction;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Merci de renseigner ce champ.")
+     * @Assert\Length(min="100",minMessage="Votre déscription doit faire au moins 100 caractères.")
      */
     private $description;
 

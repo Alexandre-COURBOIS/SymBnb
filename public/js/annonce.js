@@ -28,7 +28,6 @@ function updateCounter() {
 
     const count = +$('#annonce_images div.form-group').length;
 
-    console.log(count);
     $('#widgets_counter').val(count);
 }
 
