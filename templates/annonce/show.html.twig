@@ -49,19 +49,14 @@
             <div class="col">
                 <div class="row">
                     <div class="col-4">
-                        <img src="http://placehold.it/64x64" alt="avatar de Alexandre">
+                        <img src="{{ user.picture }}" alt="avatar de {{ user.firstname }} {{ user.lastname }}">
                     </div>
                     <div class="col">
-                        <h3>Alexandre COURBOIS</h3>
-                        <span class="badge badge-primary"> 3 Annonces</span>
+                        <h3 class="ml-1">{{ user.firstname | capitalize }} {{ user.lastname | upper }}</h3>
+                        <span class="badge badge-primary ml-1 mb-2">{% if user.annonces | length > 1  %} {{ user.annonces | length }} Annonces {% else %} {{ user.annonces | length  }} Annonce {% endif %}</span>
                     </div>
                 </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam beatae blanditiis, commodi error
-                    excepturi laboriosam officiis quidem unde voluptas voluptate.</p>
-                <p>Accusantium assumenda delectus deserunt, esse ex explicabo ipsam magnam non nulla perferendis quo
-                    quos recusandae sapiente soluta vero voluptate voluptatum!</p>
-                <p>Alias amet consequatur debitis dolorum earum expedita facilis iure laudantium magnam minus
-                    perspiciatis placeat quos ratione, sequi ullam vitae voluptatem?</p>
+                <p>{{ user.description |raw }}</p>
             </div>
         </div>
     </div>

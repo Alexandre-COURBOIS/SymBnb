@@ -52,13 +52,14 @@ class AnnonceController extends AbstractController
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
 
             foreach ($annonce->getImages() as $image ) {
                 $image->setAd($annonce);
                 $manager->persist($image);
             }
+
+            $annonce->setAuthor($this->getUser());
 
             $manager->persist($annonce);
             $manager->flush();
@@ -131,8 +132,11 @@ class AnnonceController extends AbstractController
     public function show(Annonce $annonce)
     {
 
+        $user = $annonce->getAuthor();
+
         return $this->render('annonce/show.html.twig', [
-            'annonce' => $annonce
+            'annonce' => $annonce,
+            'user' => $user
         ]);
     }
 
