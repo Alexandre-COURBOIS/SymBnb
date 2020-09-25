@@ -54,7 +54,7 @@ class AnnonceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            foreach ($annonce->getImages() as $image ) {
+            foreach ($annonce->getImages() as $image) {
                 $image->setAd($annonce);
                 $manager->persist($image);
             }
@@ -95,7 +95,7 @@ class AnnonceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            foreach ($annonce->getImages() as $image ) {
+            foreach ($annonce->getImages() as $image) {
                 $image->setAd($annonce);
                 $manager->persist($image);
             }
