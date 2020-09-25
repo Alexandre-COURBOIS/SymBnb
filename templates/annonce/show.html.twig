@@ -46,13 +46,14 @@
                     </a>
                 </div>
             </div>
+            {% set a = annonce.author %}
             <div class="col">
                 <div class="row">
                     <div class="col-4">
-                        <img src="{{ user.picture }}" alt="avatar de {{ user.firstname }} {{ user.lastname }}">
+                        <img src="{{ a.picture }}" alt="avatar de {{ a.firstname | capitalize}} {{ a.lastname }}">
                     </div>
                     <div class="col">
-                        <h3 class="ml-1">{{ user.firstname | capitalize }} {{ user.lastname | upper }}</h3>
+                        <h3 class="ml-1">{{ a.firstname | capitalize }} {{ a.lastname | upper }}</h3>
                         <span class="badge badge-primary ml-1 mb-2">{% if user.annonces | length > 1  %} {{ user.annonces | length }} Annonces {% else %} {{ user.annonces | length  }} Annonce {% endif %}</span>
                     </div>
                 </div>
