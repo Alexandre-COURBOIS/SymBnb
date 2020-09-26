@@ -49,15 +49,21 @@
             {% set a = annonce.author %}
             <div class="col">
                 <div class="row">
-                    <div class="col-4">
-                        <img src="{{ a.picture }}" alt="avatar de {{ a.firstname | capitalize}} {{ a.lastname }}">
+                    <div class="col-3">
+                        <a href="{{ path('user_show', {'slug': a.Slug}) }}">
+                        <img src="{{ a.picture }}" alt="avatar de {{ a.FullName }}" class="avatar avatar-medium">
+                        </a>
                     </div>
                     <div class="col">
-                        <h3 class="ml-1">{{ a.firstname | capitalize }} {{ a.lastname | upper }}</h3>
-                        <span class="badge badge-primary ml-1 mb-2">{% if user.annonces | length > 1  %} {{ user.annonces | length }} Annonces {% else %} {{ user.annonces | length  }} Annonce {% endif %}</span>
+                        <a href="{{ path('user_show', {'slug': a.Slug}) }}">
+                        <h3 class="ml-1">{{ a.FullName }}</h3>
+                        </a>
+                        <a href="{{ path('user_show', {'slug': a.Slug}) }}">
+                        <span class="badge badge-primary ml-1 mb-2">{% if a.annonces | length > 1 %} {{ a.annonces | length }} annonces {% else %} {{ a.annonces | length }} annonce {% endif %}</span>
+                        </a>
                     </div>
                 </div>
-                <p>{{ user.description |raw }}</p>
+                {{ a.description | raw }}
             </div>
         </div>
     </div>

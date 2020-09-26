@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page de {{ user.FullName | capitalize }}{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-3 text-center">
+                <img src="{{ user.picture }}" class="avatar mb-2" alt="avatar de {{ user.FullName }}">
+                <div>
+                    <p class="badge badge-primary">{% if user.annonces | length > 1 %} {{ user.annonces | length }} annonces {% else %} {{ user.annonces | length }} annonce {% endif %}</p>
+                </div>
+            </div>
+            <div class="col-9">
+                <h1>{{ user.FullName }}</h1>
+            </div>
+        </div>
+        {{ user.description | raw }}
+        <hr>
+        <h2 class="text-center">Les annonces de {{ user.FullName }} : </h2>
+
+        {% if user.annonces | length > 0 %}
+        <div class="row">
+            {% for annonce in user.annonces %}
+                {% include 'annonce/_annonce.html.twig' %}
+            {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">
+                    <p>
+                        <strong>{{ user.FullName }}</strong> n'a pas encore d'annonce sur notre site !
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
