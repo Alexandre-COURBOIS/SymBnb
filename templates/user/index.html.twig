@@ -14,12 +14,18 @@
             </div>
             <div class="col-9">
                 <h1>{{ user.FullName }}</h1>
+{#              Permet de voir la section ci dessous uniquement si l'utilisateur connecté correspond au information de compte #}
+                {% if user is same as (app.user) %}
+                <div class="mt-3">
+                    <a href="{{ path('account_profil') }}" class="btn btn-primary mr-2 mb-2">Modifier mes informations</a>
+                    <a href="{{ path('account_password') }}" class="btn btn-primary mb-2">Modifier mon mot de passe</a>
+                </div>
+                {% endif %}
             </div>
         </div>
         {{ user.description | raw }}
         <hr>
-        <h2 class="text-center">Les annonces de {{ user.FullName }} : </h2>
-
+        <h2 class="text-center pb-2">Les annonces de {{ user.FullName }} : </h2>
         {% if user.annonces | length > 0 %}
         <div class="row">
             {% for annonce in user.annonces %}
@@ -27,7 +33,7 @@
             {% endfor %}
             {% else %}
                 <div class="alert alert-warning">
-                    <p>
+                    <p class="text-center">
                         <strong>{{ user.FullName }}</strong> n'a pas encore d'annonce sur notre site !
                     </p>
                 </div>
