@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Annonce;
 use App\Entity\Image;
+use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -26,6 +27,23 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create('FR-fr');
 
+        $adminRole = new Role();
+        $adminRole->setTitle('ROLE_ADMIN');
+        $manager->persist($adminRole);
+
+        $adminUser = new User();
+        $adminUser->setFirstName('Alexandre')
+                  ->setLastName('Courbois')
+                  ->setEmail('courbois.alexandre76440@gmail.com')
+                  ->setPassword($this->encoder->encodePassword($adminUser, 'michel'))
+                  ->setPicture('https://media-exp1.licdn.com/dms/image/C5603AQF06PGh-OOpLA/profile-displayphoto-shrink_200_200/0?e=1604534400&v=beta&t=BMNnX29sfkNr4LneP3Vb0bK3Y55JkokdZTGZpAwiHhc')
+                  ->setIntroduction($faker->sentence)
+                  ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(5)) . '</p>')
+                  ->addUserRole($adminRole);
+
+        $manager->persist($adminUser);
+
+
         $users = [];
         $gender = ['male', 'female'];
 
@@ -40,9 +58,11 @@ class AppFixtures extends Fixture
 
             $picture .= ($genre == 'male' ? 'men/' : 'women/') . $pictureId;
 
-            $pwd1 = "abcdefghijklmnopqrstuvwxyz";
-            $longueur = strlen($pwd1);
-            $hash = $pwd1[rand(0, $longueur - 1)];
+//            $pwd1 = "abcdefghijklmnopqrstuvwxyz";
+//            $longueur = strlen($pwd1);
+//            $hash = $pwd1[rand(0, $longueur - 1)];
+
+            $hash = "password";
 
             $hash = $this->encoder->encodePassword($user, $hash);
 
