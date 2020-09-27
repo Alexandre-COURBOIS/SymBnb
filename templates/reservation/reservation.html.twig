@@ -2,6 +2,10 @@
 
 {% block title %}Reservation annonce : {{ annonce.title }}{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+{% endblock %}
+
 {% block body %}
 
     <div class="container">
@@ -37,4 +41,24 @@
 
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.fr.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function (){
+            $('#reservation_startDate, #reservation_endDate').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'fr',
+                datesDisabled: [
+                    {% for day in annonce.notAvailableDays %}
+                        "{{ day.format('d-m-Y')}}",
+                    {% endfor %}
+                ],
+                startDate: new Date(),
+            });
+        })
+    </script>
 {% endblock %}

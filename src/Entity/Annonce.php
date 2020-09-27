@@ -134,13 +134,14 @@ class Annonce
 
         // Boucle pour aller chercher chaque reservation déjà faite
         foreach ($this->reservations as $reservation) {
-            // Calcul des jours qui se trouvent entre startdate et enddate et rend le résultat en seconde sur une journée
+            // Calcul des jours qui se trouvent entre startdate et enddate et rend le résultat en seconde sur une journée dans un tableau
             $resultat = range($reservation->getStartDate()->getTimeStamp(), $reservation->getEndDate()->getTimeStamp(), 24 * 60 * 60);
-            // Execute une fonction qui me permet de formater mon resultat en milliseconde en un format Y-m-d.
+            // stock toutes mes valeurs de résultat au format Y-m-d dans un tableau
             $days = array_map(function ($dayTimeStamp) {
                 return new \DateTime(date('Y-m-d', $dayTimeStamp));
             }, $resultat);
-            // Je merge les deux tableaux pour les faire coïncider
+
+            // Je merge les deux tableaux afin que mon tableau notavailable days contienne les jours déjà reservés
             $notAvailableDays = array_merge($notAvailableDays, $days);
         }
         return $notAvailableDays;
