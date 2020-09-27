@@ -24,14 +24,14 @@
                     {{ form_row(form.endDate) }}
                 </div>
             </div>
+            <h4>Montant du séjour : <span id="amount">...</span> &euro;</h4>
+
+            <p><span id="days">0</span> nuit(s) à {{ annonce.price }} &euro; / nuit</p>
+
+            <h4 class="mt-3">Vous avez un commentaire ?</h4>
+            {{ form_row(form.commentaire) }}
         </div>
 
-        <h4>Montant du séjour : <span id="amount">...</span> &euro;</h4>
-
-        <p><span id="days">0</span> nuit(s) à {{ annonce.price }} &euro; / nuit</p>
-
-        <h2>Vous avez un commentaire ?</h2>
-        {{ form_row(form.commentaire) }}
 
         <h3>Vous êtes arrivé au bout ! A vous les vacances !</h3>
 
@@ -48,17 +48,42 @@
     <script src="{{ asset('js/bootstrap-datepicker.fr.min.js') }}"></script>
 
     <script>
-        $(document).ready(function (){
+        $(document).ready(function () {
+
             $('#reservation_startDate, #reservation_endDate').datepicker({
                 format: 'dd/mm/yyyy',
                 language: 'fr',
                 datesDisabled: [
                     {% for day in annonce.notAvailableDays %}
-                        "{{ day.format('d-m-Y')}}",
+                    "{{ day.format('d-m-Y') }}",
                     {% endfor %}
                 ],
                 startDate: new Date(),
             });
-        })
+            // A Chaque changement de date sur les inputs ... , ... j'applique la fonction calculateAmount
+            $('#reservation_startDate, #reservation_endDate').on('change',calculateAmount);
+
+        });
+
+        function calculateAmount() {
+            // récupération des dates
+
+            /* Regex = (\d+)\/(\d+)\/(\d{4}) == (\le premier nombre)\/(\le second nombre)\/(\le troisieme nombre composé de 4 chiffres)
+            en suite je replace les nombres saisies $1 = premier nombre / $2 deuxieme nombre / s3 troisieme nombre, et je les replaces
+            comme je le souhaite avec le séparateur qui m'interesse ici le "-"*/
+            const startDate = new Date($('#reservation_startDate').val().replace(/(\d+)\/(\d+)\/(\d{4})/, '$3-$2-$1'));
+            const endDate = new Date($('#reservation_endDate').val().replace(/(\d+)\/(\d+)\/(\d{4})/, '$3-$2-$1'));
+
+            // Si mes dates sont valides et que ma date d'arrivée est bien inférieur à ma date de départ :
+            if (startDate && endDate && startDate < endDate) {
+                const dayTime  = 24*60*60*1000;
+                const interval = endDate.getTime() - startDate.getTime();
+                const days     = interval / dayTime;
+                const amount   = days * {{ annonce.price }}
+
+                $('#days').text(days);
+                $('#amount').text(amount.toLocaleString('fr-FR'));
+            }
+        }
     </script>
 {% endblock %}
