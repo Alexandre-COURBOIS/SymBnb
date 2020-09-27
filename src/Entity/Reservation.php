@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
@@ -32,11 +33,13 @@ class Reservation
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $endDate;
 
@@ -85,6 +88,47 @@ class Reservation
     public function getDuration() {
         $marge = $this->endDate->diff($this->startDate);
         return $marge->days;
+    }
+
+    /**
+     * Permet de savoir si les dates sont disponibles
+     */
+    public function isBookableDates() {
+        // connaitre les dates déjà reservées
+        $notAvailableDays = $this->annonce->getNotAvailableDays();
+        // comparer les dates choisies avec les dates déjà reservées
+        $bookingDays = $this->getDays();
+
+        $format = function ($day){
+            return $day->format('Y-m-d');
+        };
+
+        // Tableau qui contient ma demande de réservation sous forme de strings au format Y-m-d
+        $days = array_map($format, $bookingDays);
+
+        // Tableau qui contient mes jours qui ne peuvent pas être réservés au format Y-m-D
+        $notAvailable = array_map($format, $notAvailableDays);
+
+        foreach ($days as $day) {
+            if(array_search($day, $notAvailable) !== false) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Permet de récupérer un tableau qui correspond aux journées de la reservation en question
+     */
+    public function getDays() {
+        //Retourne le temps en seconde entre la date de départ et de fin
+        $resultat = range($this->startDate->getTimeStamp(), $this->endDate->getTimeStamp(), 24*60*60);
+
+        // Retourne tout les jours stocké dans résultats sous forme de tableau au format Y-m-d
+        $days = array_map(function($dayTimeStamp){
+            return new \DateTime(date('Y-m-d', $dayTimeStamp));
+        }, $resultat);
+
+
+        return $days;
     }
 
     public function getId(): ?int

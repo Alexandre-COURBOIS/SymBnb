@@ -110,9 +110,10 @@ class Annonce
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function initSlug() {
+    public function initSlug()
+    {
 
-        if (empty($this->slug)){
+        if (empty($this->slug)) {
             $slug = new Slugify();
             $this->slug = $slug->slugify($this->title);
         } elseif (!empty($this->slug)) {
@@ -122,6 +123,29 @@ class Annonce
 
     }
 
+    /**
+     * Récupère les jours déjà réservés sur une annonce sous forme de tableau.
+     */
+    public function getNotAvailableDays()
+    {
+        // Récupérer les réservations déjà faites boucler dessus et voir les jours déjà pris :
+
+        $notAvailableDays = [];
+
+        // Boucle pour aller chercher chaque reservation déjà faite
+        foreach ($this->reservations as $reservation) {
+            // Calcul des jours qui se trouvent entre startdate et enddate et rend le résultat en seconde sur une journée
+            $resultat = range($reservation->getStartDate()->getTimeStamp(), $reservation->getEndDate()->getTimeStamp(), 24 * 60 * 60);
+            // Execute une fonction qui me permet de formater mon resultat en milliseconde en un format Y-m-d.
+            $days = array_map(function ($dayTimeStamp) {
+                return new \DateTime(date('Y-m-d', $dayTimeStamp));
+            }, $resultat);
+            // Je merge les deux tableaux pour les faire coïncider
+            $notAvailableDays = array_merge($notAvailableDays, $days);
+        }
+        return $notAvailableDays;
+    }
+
 
     /**
      * Permet de set l'heure à laquelle l'article est créer
@@ -129,9 +153,10 @@ class Annonce
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function initCreateDate() {
+    public function initCreateDate()
+    {
 
-        if (empty($this->getCreatedAt())){
+        if (empty($this->getCreatedAt())) {
             $this->setCreatedAt(new \DateTime());
         }
 
