@@ -188,4 +188,12 @@ class AccountController extends AbstractController
 
     }
 
+    /**
+     * Affiche la liste des reservations faites pas l'utilisateur
+     *
+     * @Route ("/account/reservations", name="account_reservations")
+     */
+    public function reservations(){
+        return $this->render('account/reservations.html.twig');
+    }
 }
