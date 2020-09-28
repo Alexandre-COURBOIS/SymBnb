@@ -8,12 +8,15 @@
             <p class="h1">{{ annonce.title }}</p>
             <p>{{ annonce.introduction }}</p>
             <p class="h2">
-                <strong>{{ annonce.rooms }} chambres </strong> pour <strong>{{ annonce.price }}&euro;</strong> par nuit
+                <strong>{{ annonce.rooms }} chambres </strong> pour <strong>{{ annonce.price | number_format(2, ',', ' ')}}&euro;</strong> par nuit
             </p>
             <a href="{{ path('reservation_create', {'slug': annonce.slug}) }}" class="btn btn-primary">Réserver !</a>
             {% if app.user and app.user == annonce.author %}
-            <a href="{{ path('annonce_edit', {'slug': annonce.slug}) }}" class="btn btn-secondary">Modifier l'annonce</a>
-            <a href="{{ path('annonce_delete', {'slug': annonce.slug}) }}" onclick="return confirm(`Etes-vous sûr de vouloir supprimer l'annonce : {{ annonce.title }} ?`)" class="btn btn-danger">Supprimer l'annonce</a>
+                <a href="{{ path('annonce_edit', {'slug': annonce.slug}) }}" class="btn btn-secondary">Modifier
+                    l'annonce</a>
+                <a href="{{ path('annonce_delete', {'slug': annonce.slug}) }}"
+                   onclick="return confirm(`Etes-vous sûr de vouloir supprimer l'annonce : {{ annonce.title }} ?`)"
+                   class="btn btn-danger">Supprimer l'annonce</a>
             {% endif %}
         </div>
     </div>
@@ -49,21 +52,53 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+
+                <hr>
+
+                {% if annonce.comments | length > 0 %}
+                    <h2 class="mb-3">Commentaires de nos voyageurs : </h2>
+                    <div class="alert alert-info">
+                        <h4 class="h3 alert-heading text-center">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <p class="">Note globale donnée par nos voyageurs</p>
+                                </div>
+                                <div class="col">
+                                    {% include 'common/rating.html.twig' with {'rating': annonce.avgRatings} %}
+                                    <p><small>(Calculée sur {{ annonce.comments | length }} avis)</small></p>
+                                </div>
+                            </div>
+                        </h4>
+                    </div>
+                    {% for comment in annonce.comments %}
+                        {% set author = comment.author %}
+                        <div class="bg-light rounded mb-3 py-3 px-3">
+                            <strong style="font-weight: bold">{{ author.firstName }}</strong> à dit :
+                            <blockquote>{{ comment.content }}</blockquote>
+                            <p><strong style="font-weight: bold">Note donnée : </strong></p>
+{#                            Ci dessous le with permet de dire que dans ma fonction contenu dans rating.html.twig rating correspond à comment.rating#}
+                            {% include 'common/rating.html.twig' with {'rating': comment.rating} %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h2 class="text-center">Cette annonce n'a pas encore reçu de commentaires.</h2>
+                {% endif %}
+
             </div>
             {% set a = annonce.author %}
             <div class="col">
                 <div class="row">
                     <div class="col-3">
                         <a href="{{ path('user_show', {'slug': a.Slug}) }}">
-                        <img src="{{ a.picture }}" alt="avatar de {{ a.FullName }}" class="avatar avatar-medium">
+                            <img src="{{ a.picture }}" alt="avatar de {{ a.FullName }}" class="avatar avatar-medium">
                         </a>
                     </div>
                     <div class="col">
                         <a href="{{ path('user_show', {'slug': a.Slug}) }}">
-                        <h3 class="ml-1">{{ a.FullName }}</h3>
+                            <h3 class="ml-1">{{ a.FullName }}</h3>
                         </a>
                         <a href="{{ path('user_show', {'slug': a.Slug}) }}">
-                        <span class="badge badge-primary ml-1 mb-2">{% if a.annonces | length > 1 %} {{ a.annonces | length }} annonces {% else %} {{ a.annonces | length }} annonce {% endif %}</span>
+                            <span class="badge badge-primary ml-1 mb-2">{% if a.annonces | length > 1 %} {{ a.annonces | length }} annonces {% else %} {{ a.annonces | length }} annonce {% endif %}</span>
                         </a>
                     </div>
                 </div>

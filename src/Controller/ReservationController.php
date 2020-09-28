@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Annonce;
+use App\Entity\Comment;
 use App\Entity\Reservation;
+use App\Form\CommentType;
 use App\Form\ReservationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -62,11 +64,30 @@ class ReservationController extends AbstractController
      *
      * @Security ("is_granted('ROLE_USER') and user == reservation.getBooker()", message="Vous n'avez pas le droit d'accèder à cette page.")
      */
-    public function show(Reservation $reservation)
+    public function show(Reservation $reservation, Request $request, EntityManagerInterface $manager)
     {
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $comment->setAnnonce($reservation->getAnnonce())
+                    ->setAuthor($this->getUser());
+
+            $manager->persist($comment);
+            $manager->flush();
+
+            $this->addFlash('success','Votre commentaire à bien été ajouté !');
+
+        }
+
 
         return $this->render('reservation/show.html.twig', [
+            'form' => $form->createView(),
             'reservation' => $reservation
         ]);
     }
+
 }

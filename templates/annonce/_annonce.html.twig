@@ -3,9 +3,13 @@
 <div class="col-md-4">
     <div class="card bg-light mb-3">
         <div class="card-header text-center">
-            {{ annonce.rooms }} chambres, <strong>{{ annonce.price }}&euro; / nuit</strong>
+            {{ annonce.rooms }} chambres, <strong>{{ annonce.price | number_format(2, ',', ' ')}}&euro; par nuit</strong>
             <br>
-            <small>pas encore noté</small>
+            {% if annonce.comments | length > 0%}
+                {% include 'common/rating.html.twig' with {'rating': annonce.avgRatings} %}
+            {% else %}
+                <small>Pas encore noté</small>
+            {% endif %}
         </div>
         <a href="{{ url }}">
             <img src="{{ annonce.coverImage }}" alt="Image de l'appartement"
@@ -16,7 +20,7 @@
                 <a href="{{ url }}">{{ annonce.title }}</a>
             </h4>
             <p class="card-text">{{ annonce.introduction }}</p>
-            <a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
+            <a href="{{ url }}" class="btn btn-primary">En savoir plus</a>
             {% if app.user and app.user == annonce.author %}
                 <a href="{{ path('annonce_edit', {'slug': annonce.slug}) }}" class="btn btn-secondary">Modifier</a>
             {% endif %}

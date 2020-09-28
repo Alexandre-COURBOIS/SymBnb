@@ -98,10 +98,16 @@ class Annonce
      */
     private $reservations;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="annonce", orphanRemoval=true)
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -121,6 +127,23 @@ class Annonce
             $this->slug = $slug->slugify($this->title);
         }
 
+    }
+
+    /**
+     * Permet d'obtenir la moyenne générale des notes d'une annonce
+     */
+    public function getAvgRatings(){
+    /*calculer la somme des notations : array_reduce = reduit le tableau à une seule valeur, ici comments est un array collection donc
+    on le transforme en vrai tableau, en suite j'initialise la fonction avec deux paramètres, total qui sera l'index des commentaires, et
+    les commentaires tiré du tableau comments*/
+        $sum = array_reduce($this->comments->toArray(), function($total, $comment) {
+            // le total s'incrémente en fonction des notes pour fournir une somme finale
+            return $total + $comment->getRating();
+            // le total vaut 0 de base
+        },0);
+        // si il n'y a pas de commentaire je n'execute pas le calcul sinon je divise par zéro et erreur php.
+        if (count($this->comments) > 0) return $sum / count($this->comments);
+        return 0;
     }
 
     /**
@@ -147,6 +170,14 @@ class Annonce
         return $notAvailableDays;
     }
 
+    /**
+     * Permet de récupérer le commentaire d'un auteur (s'il existe) par rapport à une annonce.
+     */
+    public function getCommentFromAuthor(User $author) {
+        foreach ($this->comments as $comment) {
+            if($comment->getAuthor() === $author) return $comment;
+        }
+    }
 
     /**
      * Permet de set l'heure à laquelle l'article est créer
@@ -344,6 +375,37 @@ class Annonce
             // set the owning side to null (unless already changed)
             if ($reservation->getAnnonce() === $this) {
                 $reservation->setAnnonce(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAnnonce($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAnnonce() === $this) {
+                $comment->setAnnonce(null);
             }
         }
 

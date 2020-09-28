@@ -5,25 +5,38 @@
 {% block body %}
 
 
-<div class="container">
-    <h1>Mes réservations</h1>
-    <div class="alert alert-info mt-5">
-        <p class="text-center">Retrouvez ci-dessous toutes vos réservations passées et à venir</p>
-    </div>
-    {% for reservation in app.user.reservations %}
-        {% set annonce = reservation.annonce %}
-        <div class="row">
-            <div class="col-4">
-                <img src="{{ annonce.coverImage }}" alt="Photo de l'annonce {{ annonce.title }}" class="img-fluid">
-            </div>
-            <div class="col-8">
-                    <h4>{{ annonce.title }}</h4>
-                <p>Réservation <strong>n° {{ reservation.id }}</strong></p>
-                <p>Du {{ reservation.startDate | date('d/m/Y') }} au {{ reservation.endDate | date('d/m/Y') }} pour {{ reservation.amount }} &euro;</p>
-                <a href="{{ path('reservation_show', {'id':reservation.id}) }}" class="btn btn-info">Plus d'informations</a>
-            </div>
+    <div class="container">
+        <h1>Mes réservations</h1>
+        <div class="alert alert-info mt-5">
+            <p class="text-center">Retrouvez ci-dessous toutes vos réservations passées et à venir</p>
         </div>
-    {% endfor %}
-</div>
+        {% for reservation in app.user.reservations %}
+            {% set annonce = reservation.annonce %}
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ annonce.coverImage }}" alt="Photo de l'annonce {{ annonce.title }}" class="img-fluid">
+                    <div class="mt-3">
+                        {% set comment = annonce.commentFromAuthor(app.user) %}
+                        {% if comment is not null %}
+                            <strong>Note donnée
+                                : {% include 'common/rating.html.twig' with {'rating': comment.rating} %}</strong>
+                        {% else %}
+                            <p>Vous n'avez pas encore donné de note.</p>
+                            <a href="{{ path('reservation_show', {'id' : reservation.id }) }}#comment"
+                               class="btn btn-link">Je donne mon avis</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <h4>{{ annonce.title }}</h4>
+                    <p>Réservation <strong>n° {{ reservation.id }}</strong></p>
+                    <p>Du {{ reservation.startDate | date('d/m/Y') }} au {{ reservation.endDate | date('d/m/Y') }}
+                        pour {{ reservation.amount | number_format(2, ',', ' ')}} &euro;</p>
+                    <a href="{{ path('reservation_show', {'id':reservation.id}) }}" class="btn btn-info">Plus
+                        d'informations</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

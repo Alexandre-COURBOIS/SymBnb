@@ -8,13 +8,16 @@
     {% set annonce = reservation.annonce %}
 
     <div class="container">
-        <h1 class="text-center mb-5">Votre réservation n°{{ reservation.id}} </h1>
-        
+        <h1 class="text-center my-5">Votre réservation n°{{ reservation.id }} </h1>
+
         {% if app.request.query.get('success') %}
             <div class="alert alert-success">
                 <h4 class="alert-heading text-center">Félicitations !</h4>
-                    <p class="text-center">Votre réservation auprès de <strong><a href="{{ path('user_show',{'slug':author.slug}) }}">{{ author.fullName }}</a></strong>
-                    pour l'annonce <strong><a href="{{ path('annonce_show', {'slug':annonce.slug}) }}">{{ annonce.title }}</a></strong> a bien été
+                <p class="text-center">Votre réservation auprès de <strong><a
+                                href="{{ path('user_show',{'slug':author.slug}) }}">{{ author.fullName }}</a></strong>
+                    pour l'annonce <strong><a
+                                href="{{ path('annonce_show', {'slug':annonce.slug}) }}">{{ annonce.title }}</a></strong>
+                    a bien été
                     prise en compte !</p>
             </div>
         {% endif %}
@@ -33,9 +36,9 @@
                         <dt class="col-md-4">Nombre de nuits</dt>
                         <dd class="col-md-8">{{ reservation.duration }}</dd>
                         <dt class="col-md-4">Montant total</dt>
-                        <dd class="col-md-8">{{ reservation.amount }} &euro;</dd>
+                        <dd class="col-md-8">{{ reservation.amount | number_format(2, ',', ' ') }} &euro;</dd>
                         <dt class="col-md-4">Commentaire</dt>
-                        <dd class="col-md-8">{{ reservation.commentaire }}</dd>
+                        <dd class="col-md-8">{{ reservation.commentaire | default('Aucun commentaire') }}</dd>
                     </dl>
 
                     <hr>
@@ -43,28 +46,53 @@
                     <h2 class="alert-heading">Votre hôte</h2>
                     <div class="row mb-3">
                         <div class="col-3">
-                            <img src="{{ author.picture }}" class="avatar avatar-medium" alt="Photo de {{ author.fullName }}">
+                            <img src="{{ author.picture }}" class="avatar avatar-medium"
+                                 alt="Photo de {{ author.fullName }}">
                         </div>
                         <div class="col-9">
                             <h4>
                                 <a href="{{ path('user_show', {'slug':author.slug}) }}">{{ author.fullName }}</a>
                             </h4>
-                            <span class="badge badge-primary">{% if author.annonces | length > 1 %} {{ author.annonces | length }} annonces {% else %}{{ author.annonces | length }} annonce {% endif%} </span>
+                            <span class="badge badge-primary">{% if author.annonces | length > 1 %} {{ author.annonces | length }} annonces {% else %}{{ author.annonces | length }} annonce {% endif %} </span>
                         </div>
                     </div>
                     <p>{{ author.description | raw }}</p>
-                    <a href="{{ path('user_show', {'slug':author.slug}) }}" class="btn btn-primary">Plus d'informations sur {{ author.firstName }}</a>
+                    <a href="{{ path('user_show', {'slug':author.slug}) }}" class="btn btn-primary">Plus d'informations
+                        sur {{ author.firstName }}</a>
+                </div>
+                <div class="alert alert-light">
+                    <h2 class="alert-heading">Votre avis compte !</h2>
+                    {% if date() > date(reservation.endDate) %}
+
+                        {% set comment = reservation.annonce.commentFromAuthor(app.user) %}
+                        {% if comment is not null %}
+                            <blockquote>
+                                {{ comment.content }}
+                            </blockquote>
+                            <p><strong>Note : </strong>{% include 'common/rating.html.twig' with {'rating':comment.rating} %}</p>
+                        {% else %}
+                            {{ form_start(form) }}
+                            {{ form_widget(form) }}
+                            <button type="submit" class="btn btn-success">Confirmer</button>
+                            {{ form_end(form) }}
+                        {% endif %}
+
+                    {% else %}
+                        <p>Vous ne pourrez noter cette annonce qu'à partir du moment où le voyage aura été effectué
+                            !</p>
+                    {% endif %}
                 </div>
             </div>
             <div class="col">
                 <div class="alert alert-light">
                     <h2 class="alert-heading">Votre lieux d'hébergement</h2>
-                        <h4>
-                            <a href="{{ path('annonce_show', {'slug':annonce.slug}) }}">{{ annonce.title }}</a>
-                        </h4>
+                    <h4>
+                        <a href="{{ path('annonce_show', {'slug':annonce.slug}) }}">{{ annonce.title }}</a>
+                    </h4>
                     <img src="{{ annonce.coverImage }}" alt="Image de {{ annonce.title }}" class="img-fluid">
                     {{ annonce.content | raw }}
-                    <a href="{{ path('annonce_show',{'slug':annonce.slug}) }}" class="btn btn-primary">Plus d'informations</a>
+                    <a href="{{ path('annonce_show',{'slug':annonce.slug}) }}" class="btn btn-primary">Plus
+                        d'informations</a>
                 </div>
             </div>
         </div>

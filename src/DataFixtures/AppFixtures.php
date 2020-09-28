@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Annonce;
+use App\Entity\Comment;
 use App\Entity\Image;
 use App\Entity\Reservation;
 use App\Entity\Role;
@@ -26,6 +27,8 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        //gestion roles admin
+
         $faker = Factory::create('FR-fr');
 
         $adminRole = new Role();
@@ -49,7 +52,7 @@ class AppFixtures extends Fixture
         $gender = ['male', 'female'];
 
         for ($i = 1; $i <= 10; $i++) {
-
+            // gestion utilisateurs
             $user = new User();
 
             $genre = $faker->randomElement($gender);
@@ -77,7 +80,7 @@ class AppFixtures extends Fixture
             $manager->persist($user);
             $users[] = $user;
         }
-
+        // Gestion annonces
         for ($i = 1; $i <= 30; $i++) {
 
             $ad = new Annonce();
@@ -107,7 +110,7 @@ class AppFixtures extends Fixture
                 $manager->persist($image);
 
             }
-
+            // Gestion reservation
             for ($j = 1; $j <= mt_rand(0, 10); $j++) {
                 $reservation = new Reservation();
 
@@ -115,24 +118,32 @@ class AppFixtures extends Fixture
                 $startDate = $faker->dateTimeBetween('-3 months');
                 $duration = mt_rand(3, 10);
                 $endDate = (clone $startDate)->modify("+$duration days");
+
                 $amount = $ad->getPrice() * $duration;
                 $booker = $users[mt_rand(0, count($users) - 1)];
                 $comment = $faker->paragraph();
-                $val = rand(0, 3);
 
                 $reservation->setBooker($booker)
                     ->setAnnonce($ad)
                     ->setStartDate($startDate)
                     ->setEndDate($endDate)
                     ->setCreatedAt($createdAt)
-                    ->setAmount($amount);
-                    if ($val == 2) {
-                        $reservation->setCommentaire($comment);
-                    }
+                    ->setAmount($amount)
+                    ->setCommentaire($comment);
 
 
                 $manager->persist($reservation);
 
+                // gestion commentaires :
+                if(mt_rand(0,1)){
+                    $comment = new Comment();
+                    $comment->setContent($faker->paragraph())
+                            ->setRating(mt_rand(1,5))
+                            ->setAuthor($booker)
+                            ->setAnnonce($ad);
+
+                    $manager->persist($comment);
+                }
             }
 
             $manager->persist($ad);

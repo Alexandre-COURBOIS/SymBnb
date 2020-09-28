@@ -7,6 +7,11 @@ div.annonce-title p {
     color: white;
     text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
 }
+div.annonce-title .btn {
+    margin-top: 2em;
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
 
 div.carousel-caption {
     text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
@@ -57,4 +62,31 @@ footer .copyright{
 
 .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
     color: red !important;
+}
+
+.fas {
+    color: goldenrod;
+}
+
+.far {
+    color: goldenrod;
+}
+
+.btnStyle .row .col-6 .btn{
+    width: 100% !important;
+    font-size: 1.10rem !important;
+}
+
+.btnStyle .row .col-6 p{
+    font-weight: lighter;
+    font-size: 1.10rem;
+}
+
+.btnStyle {
+    background-color: whitesmoke !important;
+    border: none;
+}
+
+.alertBtn .btn {
+    width: 100%;
 }
